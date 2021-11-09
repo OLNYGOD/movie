@@ -6,8 +6,11 @@ import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.LinearLayout
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movie.databinding.ActivityMainBinding
 import com.google.gson.Gson
+import kotlinx.android.synthetic.main.content_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +27,12 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
-        //
+        //recycler setting
+        recycler.setHasFixedSize(true)   //設定固定大小
+        recycler.layoutManager = LinearLayoutManager(this) //條列式版面
+
+
+        //處理多步執行緒
         CoroutineScope(Dispatchers.IO).launch {
             val data = URL("https://api.themoviedb.org/3/movie/popular?api_key=6ef5980812b608cffc47741728e4a1ff&language=zh-TW&page=1")
                 .readText()
