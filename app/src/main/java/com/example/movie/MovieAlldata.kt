@@ -2,10 +2,11 @@ package com.example.movie
 
 data class MovieData(
     val page: Int,
-    val movies: List<Movie>,
+    val results: List<Movie>,
     val total_pages: Int,
     val total_results: Int
 )
+
 
 data class Movie(
     val adult: Boolean,
