@@ -1,8 +1,13 @@
 package com.example.movie
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
+import coil.transform.BlurTransformation
+import coil.transform.CircleCropTransformation
+import coil.transform.RoundedCornersTransformation
 import kotlinx.android.synthetic.main.movie_row.view.*
 
 //https://ithelp.ithome.com.tw/articles/10220196 看範例
@@ -11,6 +16,8 @@ import kotlinx.android.synthetic.main.movie_row.view.*
 //https://github.com/android/views-widgets-samples/blob/main/RecyclerViewKotlin/app/src/main/java/com/example/recyclersample/flowerList/FlowersAdapter.kt
 
 class MovieAdapter ( val movies: List<Movie>) : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>() {
+    private val TAG: String? = MovieAdapter::class.java.simpleName
+
     inner class MovieViewHolder(view: View) : RecyclerView.ViewHolder(view){
         val poster = itemView.movie_poster
         val title = itemView.movie_title
@@ -33,9 +40,17 @@ class MovieAdapter ( val movies: List<Movie>) : RecyclerView.Adapter<MovieAdapte
             val movie = movies.get(position)
             holder.title.setText(movie.title)
             holder.popularity.setText(movie.popularity.toString())
+            holder.poster.load("https://image.tmdb.org/t/p/w500${movie.poster_path}") {
+                Log.d(TAG, "MovieAdapter : https://image.tmdb.org/t/p/w500${movie.poster_path}")
+                placeholder(R.drawable.picture) //預設圖片
+                //transformations(CircleCropTransformation()) //圓形圖片
+                //crossfade(true)
+                //transformations(RoundedCornersTransformation(0.5F)) //邊角圓型
+                transformations(BlurTransformation(holder.poster.context))//模糊
+                error(R.drawable.error) //出現讀取錯誤
+            }
         }
     }
-
     override fun getItemCount(): Int {
         //回傳整個 Adapter 包含幾筆資料
         return movies.size?:0
